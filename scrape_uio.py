@@ -1,10 +1,10 @@
-from urllib.request import urlopen
 import sys
 import bs4
-import subprocess 
+import shutil
+import urllib
 import argparse
 import requests
-import shutil
+import subprocess 
 
 def progress(count, total, suffix=''):
     bar_len = 60
@@ -42,10 +42,9 @@ def main(args):
         for i, url in enumerate(links):
             progress(i,N)
             local_filename = outfolder+url.split('/')[-1]
-            r = requests.get(url)
+            #r = requests.get(url)
             # TODO: Error handling TODO: Paralellize
-            with open(local_filename, 'wb') as outfile:
-                shutil.copyfileobj(r.raw, outfile)
+            urllib.request.urlretrieve(url, local_filename)
 
                 
 
@@ -60,7 +59,7 @@ def read_folder(folder_name, local=False, feed_read = True):
     if local:
         response = open(folder_name)
     else:
-        response = urlopen(folder_name)  # TODO: Error handling here
+        response = urllib.request.urlopen(folder_name)  # TODO: Error handling here
 
     html_doc = response.read()          # TODO: Error handling here?
     response.close()
